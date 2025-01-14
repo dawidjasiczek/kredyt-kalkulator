@@ -8,4 +8,4 @@ To repozytorium zawiera prosty kalkulator kredytu, który porównuje trzy różn
 
 
 ### WAŻNE:
-używać na własny użytek, nie mam pojęcia na ile poprawnie to działa.
+używać na własny użytek i ryzoyko, nie mam pojęcia na ile poprawnie to działa.
