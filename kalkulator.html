@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <title>Kalkulator kredytu – porównanie 3 scenariuszy (z jedną wartością nieruchomości i oprocentowaniem)</title>
+  <!-- Bootstrap CSS (CDN) -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+  >
+</head>
+<body class="bg-light">
+
+<div class="container my-5">
+  <h1 class="mb-4">Kalkulator kredytu – porównanie 3 scenariuszy</h1>
+
+  <p>
+    Poniższy kalkulator zakłada jednakową wartość nieruchomości oraz jednakowe
+    oprocentowanie roczne dla wszystkich trzech scenariuszy. W każdym scenariuszu
+    możesz zmieniać wkład własny, okres spłaty i miesięczną nadpłatę, by sprawdzić,
+    jak różne warunki wpływają na całkowity koszt kredytu.
+  </p>
+
+  <!-- PARAMETRY WSPÓLNE -->
+  <div class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label for="propertyValue" class="form-label">Wartość nieruchomości + remont (zł, wspólna)</label>
+      <input type="number" class="form-control" id="propertyValue" value="500000" step="0.01">
+    </div>
+    <div class="col-md-4">
+      <label for="yearlyInterestRate" class="form-label">Oprocentowanie roczne (%)</label>
+      <input type="number" class="form-control" id="yearlyInterestRate" value="7.9" step="0.01">
+    </div>
+  </div>
+  
+  <!-- SCENARIUSZE OBOK SIEBIE -->
+  <div class="row g-3">
+
+    <!-- SCENARIUSZ 1 -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Scenariusz 1</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="ownContribution1" class="form-label">Wkład własny (zł)</label>
+            <input type="number" class="form-control" id="ownContribution1" value="300000" step="0.01">
+          </div>
+          <div class="mb-3">
+            <label for="loanTermYears1" class="form-label">Okres spłaty (lata)</label>
+            <input type="number" class="form-control" id="loanTermYears1" value="35">
+          </div>
+          <div class="mb-3">
+            <label for="monthlyOverpayment1" class="form-label">Miesięczna nadpłata (zł)</label>
+            <input type="number" class="form-control" id="monthlyOverpayment1" value="0" step="0.01">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIUSZ 2 -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Scenariusz 2</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="ownContribution2" class="form-label">Wkład własny (zł)</label>
+            <input type="number" class="form-control" id="ownContribution2" value="250000" step="0.01">
+          </div>
+          <div class="mb-3">
+            <label for="loanTermYears2" class="form-label">Okres spłaty (lata)</label>
+            <input type="number" class="form-control" id="loanTermYears2" value="30">
+          </div>
+          <div class="mb-3">
+            <label for="monthlyOverpayment2" class="form-label">Miesięczna nadpłata (zł)</label>
+            <input type="number" class="form-control" id="monthlyOverpayment2" value="500" step="0.01">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCENARIUSZ 3 -->
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-header">
+          <h5 class="mb-0">Scenariusz 3</h5>
+        </div>
+        <div class="card-body">
+          <div class="mb-3">
+            <label for="ownContribution3" class="form-label">Wkład własny (zł)</label>
+            <input type="number" class="form-control" id="ownContribution3" value="200000" step="0.01">
+          </div>
+          <div class="mb-3">
+            <label for="loanTermYears3" class="form-label">Okres spłaty (lata)</label>
+            <input type="number" class="form-control" id="loanTermYears3" value="35">
+          </div>
+          <div class="mb-3">
+            <label for="monthlyOverpayment3" class="form-label">Miesięczna nadpłata (zł)</label>
+            <input type="number" class="form-control" id="monthlyOverpayment3" value="2000" step="0.01">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRZYCISK DO OBLICZANIA -->
+  <div class="row mt-4">
+    <div class="col-12">
+      <button type="button" class="btn btn-primary" onclick="calculateAll()">Oblicz</button>
+    </div>
+  </div>
+
+  <!-- WYNIKI -->
+  <div id="results-section" class="mt-5" style="display: none;">
+    <h3>Wyniki porównania</h3>
+    <div class="card">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-bordered table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width: 25%">Parametr / Wynik</th>
+                <th class="text-center">Scenariusz 1</th>
+                <th class="text-center">Scenariusz 2</th>
+                <th class="text-center">Scenariusz 3</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Kwota kredytu</th>
+                <td class="text-center" id="loanAmount1"></td>
+                <td class="text-center" id="loanAmount2"></td>
+                <td class="text-center" id="loanAmount3"></td>
+              </tr>
+              <tr>
+                <th scope="row">Miesięczna rata bazowa (bez nadpłaty)</th>
+                <td class="text-center" id="baseMonthlyPayment1"></td>
+                <td class="text-center" id="baseMonthlyPayment2"></td>
+                <td class="text-center" id="baseMonthlyPayment3"></td>
+              </tr>
+              <tr>
+                <th scope="row">Całkowita wpłata w każdym miesiącu (rata + nadpłata)</th>
+                <td class="text-center" id="monthlyPaymentPlusOver1"></td>
+                <td class="text-center" id="monthlyPaymentPlusOver2"></td>
+                <td class="text-center" id="monthlyPaymentPlusOver3"></td>
+              </tr>
+              <tr>
+                <th scope="row">Liczba rat (mies./lata)</th>
+                <td class="text-center" id="finalInstallments1"></td>
+                <td class="text-center" id="finalInstallments2"></td>
+                <td class="text-center" id="finalInstallments3"></td>
+              </tr>
+              <tr>
+                <th scope="row">Koszt odsetek</th>
+                <td class="text-center" id="totalInterest1"></td>
+                <td class="text-center" id="totalInterest2"></td>
+                <td class="text-center" id="totalInterest3"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="alert alert-info mt-3">
+          <strong>Uwaga:</strong> Każdy scenariusz ma inną strukturę spłaty
+          w zależności od indywidualnych parametrów (wkład, okres, nadpłata).
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- JavaScript (Bootstrap + własny) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+/**
+ * Oblicza liczbę rat i sumę odsetek dla podanych parametrów.
+ * Zwraca obiekt z kluczami:
+ *  - loanAmount
+ *  - finalInstallments
+ *  - totalInterest
+ *  - baseMonthlyPayment
+ *  - monthlyPaymentPlusOver
+ */
+function calculateScenario(propertyValue, yearlyInterestRate_h, ownContribution, loanTermYears, monthlyOverpayment) {
+  const loanAmount = propertyValue - ownContribution;
+  const monthlyInterestRate = (yearlyInterestRate_h / 100.0) / 12.0;
+  const totalInstallments = loanTermYears * 12;
+
+  // Rata bazowa bez nadpłaty (rata annuitetowa)
+  let baseMonthlyPayment = 0;
+  if (monthlyInterestRate > 0) {
+    baseMonthlyPayment = loanAmount *
+      (monthlyInterestRate * Math.pow(1 + monthlyInterestRate, totalInstallments)) /
+      (Math.pow(1 + monthlyInterestRate, totalInstallments) - 1);
+  } else {
+    // gdy oprocentowanie 0%
+    baseMonthlyPayment = loanAmount / totalInstallments;
+  }
+
+  // Symulacja spłaty z nadpłatą
+  let balance = loanAmount;
+  let totalInterest = 0.0;
+  let monthCount = 0;
+
+  while (balance > 0) {
+    monthCount++;
+    const interestPart = balance * monthlyInterestRate;
+    let payment = baseMonthlyPayment + monthlyOverpayment;
+
+    if (payment > balance + interestPart) {
+      payment = balance + interestPart;
+    }
+    const capitalPart = payment - interestPart;
+    balance -= capitalPart;
+    totalInterest += interestPart;
+
+    // Zabezpieczenie w razie dziwnych danych
+    if (monthCount > 1200) {
+      console.warn("Przekroczono 1200 rat – przerwano obliczenia, sprawdź parametry.");
+      break;
+    }
+  }
+
+  return {
+    loanAmount: loanAmount,
+    finalInstallments: monthCount,
+    totalInterest: totalInterest,
+    baseMonthlyPayment: baseMonthlyPayment,
+    monthlyPaymentPlusOver: baseMonthlyPayment + monthlyOverpayment
+  };
+}
+
+/** Formatuje liczby jako walutę w PLN. */
+function formatCurrency(val) {
+  return val.toLocaleString('pl-PL', {
+    style: 'currency',
+    currency: 'PLN'
+  });
+}
+
+/** Główna funkcja – pobiera dane i wyświetla wyniki dla wszystkich trzech scenariuszy. */
+function calculateAll() {
+  // PARAMETRY WSPÓLNE
+  const propertyValue = parseFloat(document.getElementById('propertyValue').value);
+  const yearlyInterestRate = parseFloat(document.getElementById('yearlyInterestRate').value);
+
+  // DOCUMENT ELEMENTS -> SCENARIUSZ 1
+  const ownContribution1 = parseFloat(document.getElementById('ownContribution1').value);
+  const loanTermYears1 = parseFloat(document.getElementById('loanTermYears1').value);
+  const monthlyOverpayment1 = parseFloat(document.getElementById('monthlyOverpayment1').value);
+
+  // DOCUMENT ELEMENTS -> SCENARIUSZ 2
+  const ownContribution2 = parseFloat(document.getElementById('ownContribution2').value);
+  const loanTermYears2 = parseFloat(document.getElementById('loanTermYears2').value);
+  const monthlyOverpayment2 = parseFloat(document.getElementById('monthlyOverpayment2').value);
+
+  // DOCUMENT ELEMENTS -> SCENARIUSZ 3
+  const ownContribution3 = parseFloat(document.getElementById('ownContribution3').value);
+  const loanTermYears3 = parseFloat(document.getElementById('loanTermYears3').value);
+  const monthlyOverpayment3 = parseFloat(document.getElementById('monthlyOverpayment3').value);
+
+  // OBLICZENIA
+  const result1 = calculateScenario(propertyValue, yearlyInterestRate, ownContribution1, loanTermYears1, monthlyOverpayment1);
+  const result2 = calculateScenario(propertyValue, yearlyInterestRate, ownContribution2, loanTermYears2, monthlyOverpayment2);
+  const result3 = calculateScenario(propertyValue, yearlyInterestRate, ownContribution3, loanTermYears3, monthlyOverpayment3);
+
+  // WYPEŁNIANIE TABELI – SCENARIUSZ 1
+  document.getElementById('loanAmount1').textContent = formatCurrency(result1.loanAmount);
+  document.getElementById('baseMonthlyPayment1').textContent = formatCurrency(result1.baseMonthlyPayment);
+  document.getElementById('monthlyPaymentPlusOver1').textContent = formatCurrency(result1.monthlyPaymentPlusOver);
+  document.getElementById('finalInstallments1').textContent =
+    result1.finalInstallments + " mies. (" + (result1.finalInstallments / 12).toFixed(1) + " lat)";
+  document.getElementById('totalInterest1').textContent = formatCurrency(result1.totalInterest);
+
+  // WYPEŁNIANIE TABELI – SCENARIUSZ 2
+  document.getElementById('loanAmount2').textContent = formatCurrency(result2.loanAmount);
+  document.getElementById('baseMonthlyPayment2').textContent = formatCurrency(result2.baseMonthlyPayment);
+  document.getElementById('monthlyPaymentPlusOver2').textContent = formatCurrency(result2.monthlyPaymentPlusOver);
+  document.getElementById('finalInstallments2').textContent =
+    result2.finalInstallments + " mies. (" + (result2.finalInstallments / 12).toFixed(1) + " lat)";
+  document.getElementById('totalInterest2').textContent = formatCurrency(result2.totalInterest);
+
+  // WYPEŁNIANIE TABELI – SCENARIUSZ 3
+  document.getElementById('loanAmount3').textContent = formatCurrency(result3.loanAmount);
+  document.getElementById('baseMonthlyPayment3').textContent = formatCurrency(result3.baseMonthlyPayment);
+  document.getElementById('monthlyPaymentPlusOver3').textContent = formatCurrency(result3.monthlyPaymentPlusOver);
+  document.getElementById('finalInstallments3').textContent =
+    result3.finalInstallments + " mies. (" + (result3.finalInstallments / 12).toFixed(1) + " lat)";
+  document.getElementById('totalInterest3').textContent = formatCurrency(result3.totalInterest);
+
+  // Pokazanie sekcji z wynikami
+  document.getElementById('results-section').style.display = 'block';
+}
+</script>
+
+</body>
+</html>
